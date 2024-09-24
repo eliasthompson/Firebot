@@ -31,7 +31,7 @@ export const QuotesManagementSystemCommand: SystemCommand<{
                 type: "string",
                 title: "Quote Display Template",
                 description: "How quotes are displayed in chat.",
-                tip: "Variables: {id}, {text}, {author}, {game}, {date}",
+                tip: "Variables: {id}, {text}, {author}, {game}, {date}, {month}, {day}, {year}",
                 default: `Quote {id}: "{text}" - @{author} [{game}] [{date}]`,
                 useTextArea: true
             },
@@ -218,12 +218,18 @@ export const QuotesManagementSystemCommand: SystemCommand<{
 
             const getFormattedQuoteString = (quote) => {
                 const prettyDate = quote.createdAt != null ? moment(quote.createdAt).format(commandOptions.quoteDateFormat) : "No Date";
+                const prettyMonth = quote.createdAt != null ? moment(quote.createdAt).format("MM") : "No Month";
+                const prettyDay = quote.createdAt != null ? moment(quote.createdAt).format("DD") : "No Day";
+                const prettyYear = quote.createdAt != null ? moment(quote.createdAt).format("YYY") : "No Year";
                 return commandOptions.quoteDisplayTemplate
                     .replace("{id}", quote._id)
                     .replace("{text}", quote.text)
                     .replace("{author}", quote.originator)
                     .replace("{game}", quote.game)
-                    .replace("{date}", prettyDate);
+                    .replace("{date}", prettyDate)
+                    .replace("{month}", prettyMonth)
+                    .replace("{day}", prettyDay)
+                    .replace("{year}", prettyYear);
             };
 
             const sendToTTS = (quote) => {
